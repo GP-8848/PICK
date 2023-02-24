@@ -31,8 +31,8 @@ class ConfigParser:
         # str to bool, from modification or from default json file
         self.update_config('distributed', (self.config['distributed'] == 'true') or self.config['distributed'] == True)
 
-        if self.config['local_rank'] == 0: # only local master process create saved output dir
-            # set save_dir where trained model and log will be saved.
+        if self.config['local_rank'] == 0:  # only local master process create saved output dir
+            # set save_dir where trained models and log will be saved.
             save_dir = Path(self.config['trainer']['save_dir'])
 
             exper_name = self.config['name']
@@ -44,7 +44,7 @@ class ConfigParser:
             self._log_dir = save_dir / 'log' / exper_name / run_id
 
             # make directory for saving checkpoints and log.
-            exist_ok = run_id == ''
+            exist_ok = (run_id == '')
             self.save_dir.mkdir(parents=True, exist_ok=exist_ok)
             self.log_dir.mkdir(parents=True, exist_ok=exist_ok)
 
@@ -65,7 +65,7 @@ class ConfigParser:
         Initialize this class from some cli arguments. Used in train, test.
         """
         for opt in options:
-            args.add_argument(*opt.flags, default=opt.default, type=opt.type, help = opt.help)
+            args.add_argument(*opt.flags, default=opt.default, type=opt.type, help=opt.help)
         if not isinstance(args, tuple):
             args = args.parse_args()
 

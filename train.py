@@ -49,7 +49,7 @@ def main(config: ConfigParser, local_master: bool, logger=None):
     logger.info(f'Dataloader instances created. Train datasets: {len(train_dataset)} samples '
                 f'Validation datasets: {len(val_dataset)} samples.') if local_master else None
 
-    # build model architecture
+    # build models architecture
     pick_model = config.init_obj('model_arch', pick_arch_module)
     logger.info(f'Model created, trainable parameters: {pick_model.model_parameters()}.') if local_master else None
 
@@ -101,7 +101,7 @@ def entry_point(config: ConfigParser):
 
     logger = config.get_logger('train') if local_master else None
     if config['distributed']:
-        logger.info('Distributed GPU training model start...') if local_master else None
+        logger.info('Distributed GPU training models start...') if local_master else None
     else:
         logger.info('One GPU or CPU training mode start...') if local_master else None
 
@@ -130,11 +130,14 @@ def entry_point(config: ConfigParser):
 
 
 if __name__ == '__main__':
+    print('ok')
+    print('fine')
     args = argparse.ArgumentParser(description='PyTorch PICK Distributed Training')
-    args.add_argument('-c', '--config', default=None, type=str,
-                      help='config file path (default: None)')
+
     args.add_argument('-r', '--resume', default=None, type=str,
                       help='path to latest checkpoint (default: None)')
+    args.add_argument('-c', '--config', default=None, type=str,
+                      help='config file path (default: None)')
     args.add_argument('-d', '--device', default=None, type=str,
                       help='indices of GPUs to be available (default: all)')
 
@@ -143,8 +146,8 @@ if __name__ == '__main__':
     options = [
         # CustomArgs(['--lr', '--learning_rate'], default=0.0001, type=float, target='optimizer;args;lr',
         #            help='learning rate (default: 0.0001)'),
-        CustomArgs(['--bs', '--batch_size'], default=2, type=int, target='train_data_loader;args;batch_size',
-                   help='batch size (default: 2)'),
+        CustomArgs(['--bs', '--batch_size'], default=30, type=int, target='train_data_loader;args;batch_size',
+                   help='batch size (default: 30)'),
         # CustomArgs(['--ng', '--n_gpu'], default=2, type=int, target='n_gpu',
         #            help='num of gpu (default: 2)'),
         CustomArgs(['-dist', '--distributed'], default='true', type=str, target='distributed',

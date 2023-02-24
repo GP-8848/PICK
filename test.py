@@ -26,7 +26,7 @@ def main(args):
     monitor_best = checkpoint['monitor_best']
     print('Loading checkpoint: {} \nwith saved mEF {:.4f} ...'.format(args.checkpoint, monitor_best))
 
-    # prepare model for testing
+    # prepare models for testing
     pick_model = config.init_obj('model_arch', pick_arch_module)
     pick_model = pick_model.to(device)
     pick_model.load_state_dict(state_dict)

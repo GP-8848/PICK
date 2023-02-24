@@ -16,7 +16,6 @@ import cv2
 from PIL import Image
 import numpy as np
 
-
 __author__ = "TengQi Ye"
 __copyright__ = "Copyright 2020-2020"
 __credits__ = ["TengQi Ye"]

@@ -45,7 +45,7 @@ class Encoder(nn.Module):
         super().__init__()
 
         self.dropout = dropout
-        assert roi_pooling_mode in ['roi_align', 'roi_pool'], 'roi pooling model: {} not support.'.format(
+        assert roi_pooling_mode in ['roi_align', 'roi_pool'], 'roi pooling models: {} not support.'.format(
             roi_pooling_mode)
         self.roi_pooling_mode = roi_pooling_mode
         assert roi_pooling_size and len(roi_pooling_size) == 2, 'roi_pooling_size not be set properly.'
@@ -98,7 +98,7 @@ class Encoder(nn.Module):
         :param boxes_coordinate: boxes coordinate, shape is (B, N, 8),
                 where 8 is coordinates (x1, y1, x2, y2, x3, y3, x4, y4).
         :param transcripts: text segments, shape is (B, N, T, D), where T is the max length of transcripts,
-                                D is dimension of model.
+                                D is dimension of models.
         :param src_key_padding_mask: text padding mask, shape is (B*N, T), True for padding value.
             if provided, specified padding elements in the key will be ignored by the attention.
             This is an binary mask. When the value is True, the corresponding value on the attention layer of Transformer

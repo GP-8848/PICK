@@ -159,7 +159,7 @@ def is_transition_allowed(constraint_type: str,
 class ConditionalRandomField(torch.nn.Module):
     """
     This module uses the "forward-backward" algorithm to compute
-    the log-likelihood of its inputs assuming a conditional random field model.
+    the log-likelihood of its inputs assuming a conditional random field models.
 
     See, e.g. http://www.cs.columbia.edu/~mcollins/fb.pdf
 

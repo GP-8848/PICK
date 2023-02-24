@@ -145,7 +145,7 @@ def test_metrics():
     print(data.index)
 
 
-# used for dataparallel mode training, distributeddataparallel model can change it for speed up.
+# used for dataparallel mode training, distributeddataparallel models can change it for speed up.
 # 1. pick_dataset.py BatchCollateFn __call__ line 190  max_boxes_num_batch & max_transcript_len
 # 2. graph.py GraphLearningLayer line 51 mask = self.compute_static_mask(box_num) instead of compute_dynamic_mask func
 # 3. decoder.py UnionLayer line 142 max_doc_seq_len = doc_seq_len.max()

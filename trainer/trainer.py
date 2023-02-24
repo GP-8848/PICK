@@ -44,7 +44,7 @@ class Trainer:
             self.global_master = True
         self.logger = config.get_logger('trainer', config['trainer']['log_verbosity']) if self.local_master else None
 
-        # setup GPU device if available, move model into configured device
+        # setup GPU device if available, move models into configured device
         self.device, self.device_ids = self._prepare_device(config['local_rank'], config['local_world_size'])
         self.model = model.to(self.device)
 
@@ -59,7 +59,7 @@ class Trainer:
         else:
             self.monitor = 'off'
 
-        # configuration to monitor model performance and save best
+        # configuration to monitor models performance and save best
         if self.monitor == 'off':
             self.monitor_mode = 'off'
             self.monitor_best = 0
@@ -86,9 +86,11 @@ class Trainer:
         if self.config['trainer']['sync_batch_norm'] and self.distributed:
             self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
 
+        # if self.distributed:
+        #     self.models = DDP(self.models, device_ids=self.device_ids, output_device=self.device_ids[0],
+        #                      find_unused_parameters=True)
         if self.distributed:
-            self.model = DDP(self.model, device_ids=self.device_ids, output_device=self.device_ids[0],
-                            find_unused_parameters=True)
+            self.model = DDP(self.model, device_ids=self.device_ids, output_device=self.device_ids[0])
 
         self.data_loader = data_loader
         if max_len_step is None:  # max length of iteration step of every epoch
@@ -147,7 +149,7 @@ class Trainer:
                                     result_dict['gl_loss'] * self.gl_loss_lambda,
                                     result_dict['crf_loss'], val_res))
 
-            # evaluate model performance according to configured metric, check early stop, and
+            # evaluate models performance according to configured metric, check early stop, and
             # save best checkpoint as model_best
             best = False
             if self.monitor_mode != 'off' and self.do_validation:
@@ -171,7 +173,7 @@ class Trainer:
         entity_name, metric = self.monitor_metric.split('-')
         val_monitor_metric_res = val_result_dict[entity_name][metric]
         try:
-            # check whether model performance improved or not, according to specified metric(monitor_metric)
+            # check whether models performance improved or not, according to specified metric(monitor_metric)
             improved = (self.monitor_mode == 'min' and val_monitor_metric_res <= self.monitor_best) or \
                        (self.monitor_mode == 'max' and val_monitor_metric_res >= self.monitor_best)
         except KeyError:
@@ -205,7 +207,7 @@ class Trainer:
                 # This mode will increase the runtime and should only be enabled for debugging
                 with torch.autograd.detect_anomaly():
                     self.optimizer.zero_grad()
-                    # model forward
+                    # models forward
                     output = self.model(**input_data_item)
                     # calculate loss
                     gl_loss = output['gl_loss']
@@ -213,11 +215,11 @@ class Trainer:
                     total_loss = torch.sum(crf_loss) + self.gl_loss_lambda * torch.sum(gl_loss)
                     # backward
                     total_loss.backward()
-                    # self.average_gradients(self.model)
+                    # self.average_gradients(self.models)
                     self.optimizer.step()
             else:
                 self.optimizer.zero_grad()
-                # model forward
+                # models forward
                 output = self.model(**input_data_item)
                 # calculate loss
                 gl_loss = output['gl_loss']
@@ -225,7 +227,7 @@ class Trainer:
                 total_loss = torch.sum(crf_loss) + self.gl_loss_lambda * torch.sum(gl_loss)
                 # backward
                 total_loss.backward()
-                # self.average_gradients(self.model)
+                # self.average_gradients(self.models)
                 self.optimizer.step()
 
             # Use a barrier() to make sure that all process have finished forward and backward
@@ -336,8 +338,8 @@ class Trainer:
                     dist.barrier()  #
                 self.valid_f1_metrics.update(predicted_tags_hard_prob.long(), union_iob_tags, new_mask)
 
-        # add histogram of model parameters to the tensorboard
-        # for name, p in self.model.named_parameters():
+        # add histogram of models parameters to the tensorboard
+        # for name, p in self.models.named_parameters():
         #     self.writer.add_histogram(name, p, bins='auto')
 
         f1_result_dict = self.valid_f1_metrics.result()
@@ -366,7 +368,7 @@ class Trainer:
 
     def _prepare_device(self, local_rank, local_world_size):
         '''
-         setup GPU device if available, move model into configured device
+         setup GPU device if available, move models into configured device
         :param local_rank:
         :param local_world_size:
         :return:
@@ -417,7 +419,7 @@ class Trainer:
         :param save_best: if True, rename the saved checkpoint to 'model_best.pth'
         :return:
         '''
-        # only local master process do save model
+        # only local master process do save models
         if not self.local_master:
             return
 
