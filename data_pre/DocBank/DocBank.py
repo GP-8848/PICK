@@ -2,16 +2,14 @@
 # -*- coding: UTF-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import argparse, sys, os, time
-import threading
+import argparse, sys, os
 from typing import List
 from multiprocessing import Pool
 from functools import partial
 
-import cv2
 from PIL import Image
 
-from examples import utils
+from data_pre import utils
 
 
 def parse_arguments(argv):

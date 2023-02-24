@@ -9,7 +9,7 @@ for more details about how to sample training/testing set from
 
 **\*\*\*\*\* Updated on Sep 17th, 2020: A training example on the large-scale document understanding dataset, 
 [DocBank](https://doc-analysis.github.io/docbank-page/), 
-is now available. Please refer to [examples/DocBank/README.md](examples/DocBank/README.md) 
+is now available. Please refer to [examples/DocBank/README.md](data_pre/DocBank/README.md) 
 for more details. Thanks [TengQi Ye
 ](https://github.com/tengerye) for this contribution.\*\*\*\*\***
 
